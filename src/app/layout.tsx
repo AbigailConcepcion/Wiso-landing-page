@@ -15,8 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wiso - Modern Digital Platform",
-  description: "Wiso is a modern digital platform providing innovative solutions and services",
+  title: "Wiso - International Services Organization",
+  description: "Wiso provides professional digital solutions including web design, e-commerce, educational platforms, and custom web applications",
+  icons: {
+    icon: '/wiso.svg',
+    shortcut: '/wiso.svg',
+    apple: '/wiso.svg',
+  },
 };
 
 export default function RootLayout({
