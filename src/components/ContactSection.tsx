@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export default function ContactSection() {
-  const phoneNumber = '237654760351';
+  const phoneNumber = '01557691897';
 
   const handleWhatsAppClick = () => {
     const message = 'Hello! I would like to get in touch with you.';

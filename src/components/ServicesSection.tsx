@@ -14,7 +14,7 @@ export default function ServicesSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const phoneNumber = '237654760351';
+  const phoneNumber = '01557691897';
 
   const handleServiceClick = (serviceName: string) => {
     const message = `Hello! I'm interested in the ${serviceName} service. Can you provide more details?`;

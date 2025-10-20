@@ -159,7 +159,7 @@ wiso/
 
 ## 📱 Contact
 
-- **WhatsApp**: +237654760351
+- **WhatsApp**: +01557691897
 - **Website**: [Wiso Landing Page](https://github.com/Kimo999-dem/Wiso-landing-page)
 
 ## 📄 License
