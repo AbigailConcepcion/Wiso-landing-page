@@ -1,15 +1,42 @@
 'use client';
 
 import { useState } from 'react';
+import CONTACT from '../config/contact';
+import { appWhatsAppLink, webWhatsAppApiLink } from '../lib/phone';
 
 export default function ContactSection() {
-  const phoneNumber = '01557691897';
+  const [disabled, setDisabled] = useState(false);
+  const phone = CONTACT.rawPhone || '09055632372';
 
   const handleWhatsAppClick = () => {
+    if (disabled) return;
+    setDisabled(true);
     const message = 'Hello! I would like to get in touch with you.';
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const appLink = appWhatsAppLink(phone, message);
+    const webLink = webWhatsAppApiLink(phone, message);
+
+    let didHide = false;
+    const onVisibility = () => { if (document.hidden) didHide = true; };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    // Attempt to open the app
+    window.location.href = appLink;
+
+    // After a short delay, if the page is still visible, open the web fallback in a new tab
+    const fallbackTimer = window.setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (!didHide) window.open(webLink, '_blank', 'noopener,noreferrer');
+    }, 1200);
+
+    // Cleanup and re-enable
+    setTimeout(() => {
+      clearTimeout(fallbackTimer);
+      document.removeEventListener('visibilitychange', onVisibility);
+      setDisabled(false);
+    }, 2000);
   };
+
+  const webLink = webWhatsAppApiLink(phone, 'Hello! I would like to get in touch with you.');
 
   return (
     <section 
@@ -82,10 +109,7 @@ export default function ContactSection() {
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
 
-              {/* Phone Number Display */}
-              <p className="mt-6 text-gray-500 dark:text-gray-500 text-sm">
-                +{phoneNumber}
-              </p>
+              {/* Phone number intentionally not displayed here; CTA will open WhatsApp */}
             </div>
           </div>
         </div>

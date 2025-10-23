@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import CONTACT from '../config/contact';
+import { appWhatsAppLink, webWhatsAppApiLink } from '../lib/phone';
 
 interface Service {
   icon: string;
@@ -14,12 +16,28 @@ export default function ServicesSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const phoneNumber = '01557691897';
+  const phone = CONTACT.rawPhone || '09055632372';
 
   const handleServiceClick = (serviceName: string) => {
     const message = `Hello! I'm interested in the ${serviceName} service. Can you provide more details?`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const appLink = appWhatsAppLink(phone, message);
+    const webLink = webWhatsAppApiLink(phone, message);
+
+    let didHide = false;
+    const onVisibility = () => { if (document.hidden) didHide = true; };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    window.location.href = appLink;
+
+    const fallbackTimer = window.setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (!didHide) window.open(webLink, '_blank', 'noopener,noreferrer');
+    }, 1200);
+
+    setTimeout(() => {
+      clearTimeout(fallbackTimer);
+      document.removeEventListener('visibilitychange', onVisibility);
+    }, 2000);
   };
 
   useEffect(() => {
