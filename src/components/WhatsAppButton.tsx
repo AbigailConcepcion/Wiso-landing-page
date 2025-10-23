@@ -7,20 +7,29 @@ import { appWhatsAppLink, webWhatsAppApiLink } from '../lib/phone';
 export default function WhatsAppButton() {
   const [disabled, setDisabled] = useState(false);
   const phone = CONTACT.rawPhone || '09055632372';
+
   const handleClick = () => {
     if (disabled) return;
     setDisabled(true);
-    // Try opening app via custom scheme, then fallback to web redirect if the page remains visible
+
     const message = '';
     const appLink = appWhatsAppLink(phone, message);
     const webLink = webWhatsAppApiLink(phone, message);
 
     let didHide = false;
-    const onVisibility = () => { if (document.hidden) didHide = true; };
+    const onVisibility = () => {
+      if (document.hidden) didHide = true;
+    };
     document.addEventListener('visibilitychange', onVisibility);
 
-    // Attempt to open app
-    window.location.href = appLink;
+    // Attempt to open the WhatsApp app via custom scheme in a new window/tab.
+    // Some browsers won't open the scheme in a new tab, but this avoids replacing the current page in some environments.
+    try {
+      window.open(appLink, '_self');
+    } catch (e) {
+      // fallback to assigning href if open fails
+      window.location.href = appLink;
+    }
 
     // After a short delay, if the page is still visible we open the web fallback in a new tab
     const fallbackTimer = window.setTimeout(() => {
